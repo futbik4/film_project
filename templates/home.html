@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Главная - Фильмы{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>Добро пожаловать в систему управления фильмами</h1>
+        <p class="lead">Это приложение позволяет управлять информацией о фильмах:</p>
+        <ul>
+            <li>Добавлять новые фильмы через форму</li>
+            <li>Импортировать фильмы из JSON/XML файлов</li>
+            <li>Экспортировать фильмы в JSON/XML форматах</li>
+            <li>Просматривать список всех фильмов</li>
+        </ul>
+        <div class="mt-4">
+            <a href="/add/" class="btn btn-primary me-2">Добавить фильм</a>
+            <a href="/import/" class="btn btn-success me-2">Импорт фильмов</a>
+            <a href="/export/" class="btn btn-info me-2">Экспорт фильмов</a>
+            <a href="/list/" class="btn btn-secondary">Список фильмов</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

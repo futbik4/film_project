@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Импорт фильмов{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h2>Импорт фильмов из файла</h2>
+        <p>Поддерживаемые форматы: JSON, XML</p>
+        
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="file" class="form-label">Выберите файл для импорта</label>
+                <input type="file" class="form-control" id="file" name="file" accept=".json,.xml" required>
+                <div class="form-text">
+                    Файл должен быть в формате JSON или XML с данными о фильмах
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success">Импортировать фильмы</button>
+        </form>
+        
+        <div class="mt-4">
+            <h5>Пример формата JSON:</h5>
+            <pre><code>[
+    {
+        "title": "Название фильма",
+        "director": "Режиссер", 
+        "year": 2020,
+        "genre": "Жанр",
+        "rating": 8.5,
+        "description": "Описание"
+    }
+]</code></pre>
+            
+            <h5>Пример формата XML:</h5>
+            <pre><code>&lt;films&gt;
+    &lt;film&gt;
+        &lt;title&gt;Название фильма&lt;/title&gt;
+        &lt;director&gt;Режиссер&lt;/director&gt;
+        &lt;year&gt;2020&lt;/year&gt;
+        &lt;genre&gt;Жанр&lt;/genre&gt;
+        &lt;rating&gt;8.5&lt;/rating&gt;
+        &lt;description&gt;Описание&lt;/description&gt;
+    &lt;/film&gt;
+&lt;/films&gt;</code></pre>
+        </div>
+    </div>
+</div>
+{% endblock %}
