@@ -12,14 +12,14 @@
                 <label for="id_title" class="form-label">Название фильма</label>
                 {{ form.title }}
                 {% if form.title.errors %}
-                    <div class="text-danger">{{ form.title.errors }}</div>
+                <div class="text-danger">{{ form.title.errors }}</div>
                 {% endif %}
             </div>
             <div class="mb-3">
                 <label for="id_director" class="form-label">Режиссер</label>
                 {{ form.director }}
                 {% if form.director.errors %}
-                    <div class="text-danger">{{ form.director.errors }}</div>
+                <div class="text-danger">{{ form.director.errors }}</div>
                 {% endif %}
             </div>
             <div class="row">
@@ -28,7 +28,7 @@
                         <label for="id_year" class="form-label">Год выпуска</label>
                         {{ form.year }}
                         {% if form.year.errors %}
-                            <div class="text-danger">{{ form.year.errors }}</div>
+                        <div class="text-danger">{{ form.year.errors }}</div>
                         {% endif %}
                     </div>
                 </div>
@@ -37,7 +37,7 @@
                         <label for="id_rating" class="form-label">Рейтинг</label>
                         {{ form.rating }}
                         {% if form.rating.errors %}
-                            <div class="text-danger">{{ form.rating.errors }}</div>
+                        <div class="text-danger">{{ form.rating.errors }}</div>
                         {% endif %}
                     </div>
                 </div>
@@ -46,14 +46,14 @@
                 <label for="id_genre" class="form-label">Жанр</label>
                 {{ form.genre }}
                 {% if form.genre.errors %}
-                    <div class="text-danger">{{ form.genre.errors }}</div>
+                <div class="text-danger">{{ form.genre.errors }}</div>
                 {% endif %}
             </div>
             <div class="mb-3">
                 <label for="id_description" class="form-label">Описание</label>
                 {{ form.description }}
                 {% if form.description.errors %}
-                    <div class="text-danger">{{ form.description.errors }}</div>
+                <div class="text-danger">{{ form.description.errors }}</div>
                 {% endif %}
             </div>
             <button type="submit" class="btn btn-primary">Добавить фильм</button>

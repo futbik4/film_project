@@ -4,14 +4,14 @@ from .models import Film
 class FilmForm(forms.ModelForm):
     class Meta:
         model = Film
-        fields = ['title', 'director', 'year', 'genre', 'rating', 'description']
+        fields = ['title', 'director', 'year', 'genre', 'rating', 'description',]
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'director': forms.TextInput(attrs={'class': 'form-control'}),
             'year': forms.NumberInput(attrs={'class': 'form-control'}),
             'genre': forms.TextInput(attrs={'class': 'form-control'}),
             'rating': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.1'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),  
         }
     
     def clean_year(self):
