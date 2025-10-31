@@ -4,7 +4,7 @@ from .models import Film
 class FilmForm(forms.ModelForm):
     class Meta:
         model = Film
-        fields = ['title', 'director', 'year', 'genre', 'rating', 'description',]
+        fields = ['title', 'director', 'year', 'genre', 'rating', 'description','country']
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'director': forms.TextInput(attrs={'class': 'form-control'}),
@@ -12,6 +12,7 @@ class FilmForm(forms.ModelForm):
             'genre': forms.TextInput(attrs={'class': 'form-control'}),
             'rating': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.1'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),  
+            'country': forms.TextInput(attrs={'class': 'form-control'}),
         }
     
     def clean_year(self):

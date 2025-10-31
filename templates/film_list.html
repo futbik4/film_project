@@ -18,6 +18,7 @@
                             <th>Жанр</th>
                             <th>Рейтинг</th>
                             <th>Описание</th>
+                            <th>Страна</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -33,6 +34,7 @@
                                 </span>
                             </td>
                             <td>{{ film.description|truncatewords:10 }}</td>
+                            <td>{{ film.country }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>

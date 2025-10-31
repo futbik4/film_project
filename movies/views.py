@@ -43,7 +43,8 @@ def export_films(request):
                     'year': film.year,
                     'genre': film.genre,
                     'rating': film.rating,
-                    'description': film.description
+                    'description': film.description,
+                    'country': film.country
                 })
             
             response = HttpResponse(json.dumps(films_data, ensure_ascii=False, indent=2), 
@@ -96,7 +97,9 @@ def import_films(request):
                             'year': film_data.get('year', 0),
                             'genre': film_data.get('genre', ''),
                             'rating': film_data.get('rating', 0),
-                            'description': film_data.get('description', '')
+                            'description': film_data.get('description', ''),
+                            'country': film_data.get('country', '')
+
                         }
                     )
                 

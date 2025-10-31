@@ -7,6 +7,7 @@ class Film(models.Model):
     genre = models.CharField(max_length=100, verbose_name="Жанр")
     rating = models.FloatField(verbose_name="Рейтинг")
     description = models.TextField(verbose_name="Описание", blank=True)
+    country = models.CharField(max_length=100, verbose_name="Старана")
     
     def __str__(self):
         return self.title
