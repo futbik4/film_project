@@ -20,7 +20,7 @@ cd film_project
 ```
 2. **Создайте виртуальное окружение:**
 ```
-python -m venv venv
+py -m venv venv
 ```
 3. **Активируйте виртуальное окружение:**
 ```
@@ -32,12 +32,12 @@ pip install -r requirements.txt
 ```
 6. **Выполнить миграции**
 ```
-python manage.py makemigrations
-python manage.py migrate
+py manage.py makemigrations
+py manage.py migrate
 ```
 7. **Запустите сервер:**
 ```
-python manage.py runserver
+py manage.py runserver
 ```
 8. **Откройте в браузере:**
 <http://127.0.0.1:8000/>
