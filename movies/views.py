@@ -1,5 +1,4 @@
 import json
-import xml.etree.ElementTree as ET
 import os
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
@@ -7,6 +6,7 @@ from django.conf import settings
 from .forms import FilmForm
 from .models import Film
 from django.contrib import messages
+from django.db import models
 
 def home(request):
     return render(request, 'home.html')
@@ -15,8 +15,48 @@ def add_film(request):
     if request.method == 'POST':
         form = FilmForm(request.POST)
         if form.is_valid():
-            film = form.save()
-            messages.success(request, f'Фильм "{film.title}" успешно добавлен!')
+            save_location = form.cleaned_data['save_location']
+            film_data = form.cleaned_data
+            
+            if save_location == 'db':
+                duplicate = Film.objects.filter(
+                    title=film_data['title'],
+                    director=film_data['director'], 
+                    year=film_data['year']
+                ).exists()
+                
+                if duplicate:
+                    messages.warning(request, f'Фильм "{film_data["title"]}" уже есть в базе!')
+                    return render(request, 'add_film.html', {'form': form})
+                
+                film = form.save()
+                messages.success(request, f'Фильм "{film.title}" сохранен в БД!')
+                
+            elif save_location == 'json':
+                data_dir = os.path.join(settings.MEDIA_ROOT, 'film_data')
+                os.makedirs(data_dir, exist_ok=True)
+                json_file_path = os.path.join(data_dir, 'films.json')
+                
+                films_list = []
+                if os.path.exists(json_file_path):
+                    with open(json_file_path, 'r', encoding='utf-8') as f:
+                        films_list = json.load(f)
+                
+                films_list.append({
+                    'title': film_data['title'],
+                    'director': film_data['director'],
+                    'year': film_data['year'],
+                    'genre': film_data['genre'], 
+                    'rating': film_data['rating'],
+                    'description': film_data['description'],
+                    'country': film_data['country']
+                })
+                
+                with open(json_file_path, 'w', encoding='utf-8') as f:
+                    json.dump(films_list, f, ensure_ascii=False, indent=2)
+                
+                messages.success(request, f'Фильм "{film_data["title"]}" сохранен в JSON!')
+            
             return redirect('add_film')
     else:
         form = FilmForm()
@@ -50,22 +90,6 @@ def export_films(request):
             response = HttpResponse(json.dumps(films_data, ensure_ascii=False, indent=2), 
                                   content_type='application/json')
             response['Content-Disposition'] = 'attachment; filename="films.json"'
-            return response
-            
-        elif format_type == 'xml':
-            root = ET.Element('films')
-            for film in films:
-                film_elem = ET.SubElement(root, 'film')
-                ET.SubElement(film_elem, 'title').text = film.title
-                ET.SubElement(film_elem, 'director').text = film.director
-                ET.SubElement(film_elem, 'year').text = str(film.year)
-                ET.SubElement(film_elem, 'genre').text = film.genre
-                ET.SubElement(film_elem, 'rating').text = str(film.rating)
-                ET.SubElement(film_elem, 'description').text = film.description
-            
-            response = HttpResponse(ET.tostring(root, encoding='utf-8'), 
-                                  content_type='application/xml')
-            response['Content-Disposition'] = 'attachment; filename="films.xml"'
             return response
     
     return render(request, 'export_films.html', {'films_count': films_count})
@@ -101,24 +125,7 @@ def import_films(request):
                             'country': film_data.get('country', '')
 
                         }
-                    )
-                
-            elif file_extension == '.xml':
-                tree = ET.parse(file_path)
-                root = tree.getroot()
-                
-                for film_elem in root.findall('film'):
-                    Film.objects.get_or_create(
-                        title=film_elem.find('title').text,
-                        defaults={
-                            'director': film_elem.find('director').text if film_elem.find('director') is not None else '',
-                            'year': int(film_elem.find('year').text) if film_elem.find('year') is not None else 0,
-                            'genre': film_elem.find('genre').text if film_elem.find('genre') is not None else '',
-                            'rating': float(film_elem.find('rating').text) if film_elem.find('rating') is not None else 0,
-                            'description': film_elem.find('description').text if film_elem.find('description') is not None else ''
-                        }
-                    )
-            
+                    )           
             else:
                 messages.error(request, 'Неподдерживаемый формат файла')
                 os.remove(file_path)
@@ -135,5 +142,76 @@ def import_films(request):
     return render(request, 'import_films.html')
 
 def film_list(request):
-    films = Film.objects.all()
+    source = request.GET.get('source', 'db')
+    
+    if source == 'file':
+        films = []
+        try:
+            json_file_path = os.path.join(settings.MEDIA_ROOT, 'film_data', 'films.json')
+            if os.path.exists(json_file_path):
+                with open(json_file_path, 'r', encoding='utf-8') as f:
+                    films_data = json.load(f)
+                
+                for film_data in films_data:
+                    films.append(type('Film', (), {
+                        'title': film_data.get('title', ''),
+                        'director': film_data.get('director', ''),
+                        'year': film_data.get('year', 0),
+                        'genre': film_data.get('genre', ''),
+                        'rating': film_data.get('rating', 0),
+                        'description': film_data.get('description', ''),
+                        'country': film_data.get('country', '')
+                    })())
+        except Exception as e:
+            messages.error(request, f'Ошибка при загрузке из файлов: {str(e)}')
+    else:
+        films = Film.objects.all()
+    
     return render(request, 'film_list.html', {'films': films})
+
+from django.http import JsonResponse
+
+def film_search(request):
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        query = request.GET.get('q', '')
+        films = Film.objects.filter(
+            models.Q(title__icontains=query) |
+            models.Q(director__icontains=query) |
+            models.Q(genre__icontains=query) |
+            models.Q(country__icontains=query)
+        )
+        films_data = []
+        for film in films:
+            films_data.append({
+                'id': film.id,
+                'title': film.title,
+                'director': film.director,
+                'year': film.year,
+                'genre': film.genre,
+                'rating': film.rating,
+                'description': film.description,
+                'country': film.country
+            })
+        return JsonResponse(films_data, safe=False)
+    return JsonResponse([], safe=False)
+
+def edit_film(request, film_id):
+    film = Film.objects.get(id=film_id)
+    if request.method == 'POST':
+        form = FilmForm(request.POST, instance=film)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'Фильм "{film.title}" успешно обновлен!')
+            return redirect('film_list')
+    else:
+        form = FilmForm(instance=film)
+    return render(request, 'edit_film.html', {'form': form, 'film': film})
+
+def delete_film(request, film_id):
+    film = Film.objects.get(id=film_id)
+    if request.method == 'POST':
+        title = film.title
+        film.delete()
+        messages.success(request, f'Фильм "{title}" успешно удален!')
+        return redirect('film_list')
+    return render(request, 'delete_film.html', {'film': film})

@@ -6,13 +6,13 @@
 <div class="row">
     <div class="col-md-8">
         <h2>Импорт фильмов из файла</h2>
-        <p>Поддерживаемые форматы: JSON, XML</p>
+        <p>Поддерживаемые форматы: JSON</p>
         
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="mb-3">
                 <label for="file" class="form-label">Выберите файл для импорта</label>
-                <input type="file" class="form-control" id="file" name="file" accept=".json,.xml" required>
+                <input type="file" class="form-control" id="file" name="file" accept=".json," required>
                 <div class="form-text">
                     Файл должен быть в формате JSON или XML с данными о фильмах
                 </div>

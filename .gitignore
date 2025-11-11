@@ -24,3 +24,10 @@ Thumbs.db
 # Project specific
 *.json
 *.xml
+
+# Environment variables
+.env
+*.env
+
+# Database
+db.sqlite3

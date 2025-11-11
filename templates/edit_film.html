@@ -1,36 +1,14 @@
 {% extends 'base.html' %}
 
-{% block title %}Добавить фильм{% endblock %}
+{% block title %}Редактировать фильм{% endblock %}
 
 {% block content %}
 <div class="row">
     <div class="col-md-8">
-        <h2>Добавить новый фильм</h2>
+        <h2>Редактировать фильм: {{ film.title }}</h2>
         <form method="post">
             {% csrf_token %}
             
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Куда сохранить данные?</h5>
-                </div>
-                <div class="card-body">
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="save_location" 
-                               id="save_db" value="db" checked>
-                        <label class="form-check-label" for="save_db">
-                            <strong>Сохранить в базу данных</strong> (с проверкой на дубликаты)
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="save_location" 
-                               id="save_json" value="json">
-                        <label class="form-check-label" for="save_json">
-                            Сохранить в JSON файл
-                        </label>
-                    </div>
-                </div>
-            </div>
-
             <div class="mb-3">
                 <label for="id_title" class="form-label">Название фильма *</label>
                 {{ form.title }}
@@ -89,8 +67,8 @@
                 {% endif %}
             </div>
             
-            <button type="submit" class="btn btn-primary">Добавить фильм</button>
-            <a href="{% url 'home' %}" class="btn btn-secondary">Отмена</a>
+            <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+            <a href="{% url 'film_list' %}" class="btn btn-secondary">Отмена</a>
         </form>
     </div>
 </div>
