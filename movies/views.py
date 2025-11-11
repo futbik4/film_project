@@ -198,11 +198,16 @@ def film_search(request):
 def edit_film(request, film_id):
     film = Film.objects.get(id=film_id)
     if request.method == 'POST':
-        form = FilmForm(request.POST, instance=film)
-        if form.is_valid():
-            form.save()
-            messages.success(request, f'Фильм "{film.title}" успешно обновлен!')
-            return redirect('film_list')
+        film.title = request.POST.get('title')
+        film.director = request.POST.get('director')
+        film.year = request.POST.get('year')
+        film.genre = request.POST.get('genre')
+        film.rating = request.POST.get('rating')
+        film.description = request.POST.get('description')
+        film.country = request.POST.get('country')
+        film.save()
+        messages.success(request, f'Фильм "{film.title}" успешно обновлен!')
+        return redirect('film_list')
     else:
         form = FilmForm(instance=film)
     return render(request, 'edit_film.html', {'form': form, 'film': film})
@@ -212,6 +217,6 @@ def delete_film(request, film_id):
     if request.method == 'POST':
         title = film.title
         film.delete()
-        messages.success(request, f'Фильм "{title}" успешно удален!')
+        messages.success(request, f'Фильм "{title}" удалён!')
         return redirect('film_list')
     return render(request, 'delete_film.html', {'film': film})
