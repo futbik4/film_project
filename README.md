@@ -11,6 +11,7 @@
 2. Выполните: `docker compose up --build`
 3. Откройте: http://localhost:8000
 4. Остановить docker: `docker compose down`
+
 Для переноса данных из SQLite: `docker compose exec web python migrate_data.py`
 
 ## Функциональность
