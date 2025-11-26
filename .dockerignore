@@ -1,0 +1,39 @@
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.python
+
+# Django
+db.sqlite3
+*.log
+
+# Environment
+.env
+.venv
+env/
+venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Git
+.git
+.gitignore
+
+# Статические файлы 
+staticfiles/
+media/

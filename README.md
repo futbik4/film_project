@@ -5,6 +5,14 @@
 ## Работающее приложение
 **Доступно по адресу:** https://futbik4.pythonanywhere.com/
 
+## Запуск через Docker
+
+1. Убедитесь что установлен Docker
+2. Выполните: `docker compose up --build`
+3. Откройте: http://localhost:8000
+4. Остановить docker: `docker compose down`
+Для переноса данных из SQLite: `docker compose exec web python migrate_data.py`
+
 ## Функциональность
 
 - Добавление фильмов с выбором места сохранения (БД/JSON)
@@ -47,6 +55,13 @@ py manage.py runserver
 
 ## Технологии
 - Django 5.2.8
-- SQLite
+- PostgreSQL + SQLite
+- Docker
 - Bootstrap 5
 - Python-dotenv
+
+## Docker конфигурация
+- `Dockerfile` - сборка образа приложения
+- `docker-compose.yml` - запуск Django + PostgreSQL
+- `.env` - настройки базы данных и Django
+- `.dockerignore` - исключаемые файлы
